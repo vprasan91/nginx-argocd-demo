@@ -1,0 +1,9 @@
+mkdir -p nginx-argocd-demo/manifests
+# Copy the README.md and nginx-deployment.yaml to these directories
+cd nginx-argocd-demo
+git init
+git add .
+git commit -m "Initial commit with Nginx deployment"
+git branch -M main
+git remote add origin https://github.com/vprasan91/nginx-argocd-demo.git
+git push -u origin main
