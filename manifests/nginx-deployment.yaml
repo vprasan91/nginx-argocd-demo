@@ -1,9 +1,32 @@
-mkdir -p nginx-argocd-demo/manifests
-# Copy the README.md and nginx-deployment.yaml to these directories
-cd nginx-argocd-demo
-git init
-git add .
-git commit -m "Initial commit with Nginx deployment"
-git branch -M main
-git remote add origin https://github.com/vprasan91/nginx-argocd-demo.git
-git push -u origin main
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "<html><head><title>Pod Info</title><style>body{font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f5f5f5}div{background:white;padding:30px;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1);text-align:center}h1{color:#333}p{color:#0066cc;font-size:24px}</style></head><body><div><h1>Pod Information</h1><p>Hostname: $POD_NAME</p></div></body></html>" > /usr/share/nginx/html/index.html
+          nginx -g "daemon off;"
